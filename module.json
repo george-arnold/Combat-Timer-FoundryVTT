@@ -16,6 +16,7 @@
 			"path": "lang/en.json"
 		}
 	],
+	"changelog": "https://github.com/george-arnold/combat-timer/releases",
 	"download": "https://github.com/george-arnold/combat-timer/archive/refs/tags/0.2.1.zip",
 	"manifest": "https://github.com/george-arnold/combat-timer/releases/latest/download/module.json",
 	"url": "https://github.com/george-arnold/combat-timer/"
