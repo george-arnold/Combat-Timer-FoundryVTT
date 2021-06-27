@@ -80,7 +80,7 @@ Hooks.on('updateCombat', async (e, t, d) => {
 
 	function setTime() {
 		++e.combatant.timer;
-		e.combatant.timer === 120
+		e.combatant.timer >= 120
 			? pContent.classList.add('bg-dark-red')
 			: pContent.classList.remove('bg-dark-red');
 		++e.combatant.totalTime;
@@ -130,48 +130,51 @@ Hooks.on('deleteCombat', async (e) => {
 		combatant.timer > 0
 			? combatant.timerRoundArray.push(combatant.timer)
 			: null;
+		if (combatant.totalTime) {
+	finalMinutesReport = Math.floor(combatant.totalTime / 60);
+	finalSecondsReport = combatant.totalTime % 60;
 
-		finalMinutesReport = Math.floor(combatant.totalTime / 60);
-		finalSecondsReport = combatant.totalTime % 60;
+	finalSecondsReport.toString().length < 2
+		? (finalSecondsReport = '0' + finalSecondsReport)
+		: null;
 
-		finalSecondsReport.toString().length < 2
-			? (finalSecondsReport = '0' + finalSecondsReport)
+	totalTimeDocument = document.createElement('div');
+	totalTimeDocument.classList.add('combatant-times');
+	totalTimeDocument.innerHTML = `<h5 class="total-combat-time"> ${combatant.name} ${finalMinutesReport}:${finalSecondsReport}</h5>`;
+
+	avgPerRound = Math.floor(
+		combatant.totalTime / combatant.timerRoundArray.length / 60
+	);
+
+	avgPerRound > 5
+		? totalTimeDocument.classList.add('heading-color-red')
+		: avgPerRound < 2
+		? totalTimeDocument.classList.add('heading-color-green')
+		: null;
+
+	combatant.timerRoundArray.forEach((time, index) => {
+		recordRounds = document.createElement('span');
+		let byRoundMinute = Math.floor(time / 60);
+		let byRoundSecond = time % 60;
+		byRoundSecond.toString().length < 2
+			? (byRoundSecond = '0' + byRoundSecond)
 			: null;
+		recordRounds.innerHTML = `<p class="round-title"> Round ${
+			index + 1
+		} </p> <p class="round-time">Time: ${byRoundMinute}:${byRoundSecond} </p>`;
 
-		totalTimeDocument = document.createElement('div');
-		totalTimeDocument.classList.add('combatant-times');
-		totalTimeDocument.innerHTML = `<h5 class="total-combat-time"> ${combatant.name} ${finalMinutesReport}:${finalSecondsReport}</h5>`;
-
-		avgPerRound = Math.floor(
-			combatant.totalTime / combatant.timerRoundArray.length / 60
-		);
-
-		avgPerRound > 5
-			? totalTimeDocument.classList.add('heading-color-red')
-			: avgPerRound < 2
-			? totalTimeDocument.classList.add('heading-color-green')
+		byRoundMinute >= 4
+			? recordRounds.classList.add('bg-dark-red')
 			: null;
+		byRoundMinute < 1
+			? recordRounds.classList.add('bg-dark-green')
+			: null;
+		totalTimeDocument.appendChild(recordRounds);
+	});
+	timeCard.appendChild(totalTimeDocument);
+}
+		
 
-		combatant.timerRoundArray.forEach((time, index) => {
-			recordRounds = document.createElement('span');
-			let byRoundMinute = Math.floor(time / 60);
-			let byRoundSecond = time % 60;
-			byRoundSecond.toString().length < 2
-				? (byRoundSecond = '0' + byRoundSecond)
-				: null;
-			recordRounds.innerHTML = `<p class="round-title"> Round ${
-				index + 1
-			} </p> <p class="round-time">Time: ${byRoundMinute}:${byRoundSecond} </p>`;
-
-			byRoundMinute >= 4
-				? recordRounds.classList.add('bg-dark-red')
-				: null;
-			byRoundMinute < 1
-				? recordRounds.classList.add('bg-dark-green')
-				: null;
-			totalTimeDocument.appendChild(recordRounds);
-		});
-		timeCard.appendChild(totalTimeDocument);
 	});
 	document.body.appendChild(timeCard);
 	clearInterval(timer);
