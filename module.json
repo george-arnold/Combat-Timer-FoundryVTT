@@ -3,7 +3,7 @@
 	"title": "Combat Timer - Make Battles Faster",
 	"description": "A simple mod that adds a timer to the top of the screen to help players know how much time they're taking, and DMs to track time/turn logs",
 	"author": "Aeondor",
-	"version": "0.2.3",
+	"version": "0.3.0-beta",
 	"minimumCoreVersion": "0.5.6",
 	"compatibleCoreVersion": "0.7.2",
 	"socket": true,
